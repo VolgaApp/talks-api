@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,8 +21,12 @@ export class TopicsService {
     return this.topicRepository.find();
   }
 
-  findOne(id: number) {
-    return this.topicRepository.findOneOrFail(id);
+  async findOne(id: number) {
+    const topic = await this.topicRepository.findOne(id);
+    if (!topic) {
+      throw new NotFoundException(`topic ${id} not found`);
+    }
+    return topic;
   }
 
   async update(id: number, updateTopicDto: UpdateTopicDto) {
@@ -37,7 +41,10 @@ export class TopicsService {
   }
 
   async remove(id: number) {
-    const topic = await this.topicRepository.findOneOrFail(id);
+    const topic = await this.topicRepository.findOne(id);
+    if (!topic) {
+      throw new NotFoundException(`topic ${id} not found`);
+    }
     return this.topicRepository.remove(topic);
   }
 }

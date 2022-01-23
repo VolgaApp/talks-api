@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TopicsService } from './topics.service';
 import { CreateTopicDto } from './dto/create-topic.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('topics')
+@UseGuards(JwtAuthGuard)
 export class TopicsController {
   constructor(private readonly topicsService: TopicsService) {}
 
